@@ -74,7 +74,7 @@ other.org. A    192.0.2.9
 
 ## Checks
 
-The checks catch missing or misplaced SOA and NS records, duplicate records, CNAME conflicts and loops, alias targets, missing address records, inconsistent RRset TTLs, records outside the zone, invalid SOA timing, and likely missing trailing dots.
+The checks catch missing or misplaced SOA and NS records, duplicate records, CNAME conflicts and loops, alias targets, missing address records, inconsistent RRset TTLs, records outside the zone, invalid SOA timing, likely missing trailing dots, and CNAME, NS, MX or SRV targets written as IPv4 addresses (ZC112: `IN NS 192.0.2.53` names the host `192.0.2.53.example.com.`, so use a host name with its own A record).
 
 For `good.zone`, `zonevet check good.zone` prints:
 
