@@ -96,6 +96,34 @@ def _trailing_dot_findings(zone: Zone) -> list[Finding]:
     return findings
 
 
+def _ipv4_target_findings(zone: Zone) -> list[Finding]:
+    findings: list[Finding] = []
+    target_types = {"CNAME", "NS", "MX", "SRV"}
+
+    for record in zone.records:
+        if record.rtype not in target_types:
+            continue
+        for reference in record.name_references:
+            if reference.field != "target":
+                continue
+            parts = reference.raw.removesuffix(".").split(".")
+            if len(parts) != 4 or any(
+                not 1 <= len(part) <= 3
+                or any(character < "0" or character > "9" for character in part)
+                for part in parts
+            ):
+                continue
+            findings.append(
+                Finding(
+                    reference.line,
+                    "ZC112",
+                    f"{record.rtype} target {quote(reference.raw)} looks like an IPv4 address "
+                    "(use a host name)",
+                )
+            )
+    return findings
+
+
 def check_zone(zone: Zone) -> list[Finding]:
     """Return all specified semantic findings in stable report order."""
     records = zone.records
@@ -243,4 +271,5 @@ def check_zone(zone: Zone) -> list[Finding]:
             )
 
     findings.extend(_trailing_dot_findings(zone))
+    findings.extend(_ipv4_target_findings(zone))
     return sorted(findings, key=lambda finding: (finding.line, finding.code))

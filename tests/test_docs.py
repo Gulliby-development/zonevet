@@ -120,9 +120,9 @@ EXPECTED_SOURCE_FILES = {
     "ipaddr.py", "lexer.py", "names.py", "rdata.py", "report.py", "text.py", "ttl.py", "zone.py",
 }
 EXPECTED_TEST_FILES = {
-    "test_args.py", "test_checks.py", "test_cli.py", "test_diffing.py", "test_docs.py",
-    "test_ipaddr.py", "test_lexer.py", "test_names.py", "test_rdata.py", "test_report.py",
-    "test_text.py", "test_ttl.py", "test_zone.py",
+    "test_address_targets.py", "test_args.py", "test_checks.py", "test_cli.py", "test_diffing.py",
+    "test_docs.py", "test_ipaddr.py", "test_lexer.py", "test_names.py", "test_rdata.py",
+    "test_report.py", "test_text.py", "test_ttl.py", "test_zone.py",
 }
 
 @pytest.fixture(scope="module")
@@ -244,7 +244,7 @@ def test_inventory_file_counts_and_line_budgets() -> None:
     assert source_files == EXPECTED_SOURCE_FILES
     assert test_files == EXPECTED_TEST_FILES
     assert len(source_files) == 14
-    assert len(test_files) == 13
+    assert len(test_files) == 14
     assert all(
         len(path.read_text(encoding="utf-8").splitlines()) < 400
         for path in (ROOT / "zonevet").glob("*.py")
