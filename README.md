@@ -150,7 +150,7 @@ Exit code 0 means the command completed without a reported problem. Exit code 1 
 
 ## Development
 
-Install the development tools with `python -m pip install pytest ruff`, then run the test suite and linter from the repository root:
+Install the development tools with `python -m pip install ".[dev]"` (the `dev` extra of `pyproject.toml` lists `pytest` and `ruff`), then run the test suite and linter from the repository root:
 
 
 ```text

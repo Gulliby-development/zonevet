@@ -264,6 +264,9 @@ name = "zonevet"
 version = "0.1.0"
 requires-python = ">=3.11"
 
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
@@ -271,3 +274,18 @@ pythonpath = ["."]
 [tool.ruff]
 line-length = 100
 """
+
+
+def test_dev_extra_names_the_tools_ci_and_readme_use() -> None:
+    import tomllib
+
+    manifest = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    tools = manifest["project"]["optional-dependencies"]["dev"]
+    assert tools == ["pytest", "ruff"]
+    assert set(manifest["project"]) == {"name", "version", "requires-python", "optional-dependencies"}
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert all(tool in ci for tool in tools)
+    document = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert 'python -m pip install ".[dev]"' in document
+    assert "python -m pip install pytest ruff" not in document
+
